@@ -13,10 +13,10 @@ Function loadConfig() as Object
 '}
     
 {
-    Title: "Roku Example One"
-    streamFormat: "mp4"
+    Title: "TRT 1"
+    streamFormat: "m3u8"
     Logo: "https://placeholdit.imgix.net/~text?txtsize=33&txt=channel+logo&w=267&h=150"
-    Stream: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+    Stream: "https://trt1.persona.video/master.m3u8?hls=1"
 }
 {
     Title: "Roku Example Two"
