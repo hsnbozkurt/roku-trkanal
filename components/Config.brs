@@ -15,14 +15,14 @@ Function loadConfig() as Object
 {
     Title: "TRT 1"
     streamFormat: "m3u8"
-    Logo: "https://placeholdit.imgix.net/~text?txtsize=33&txt=channel+logo&w=267&h=150"
+    Logo: "https://www.tv-direct.fr/assets/logo/chaines/trt-1.jpg"
     Stream: "https://trt1.persona.video/master.m3u8?hls=1"
 }
 {
-    Title: "Roku Example Two"
-    streamFormat: "mp4"
-    Logo: "https://placeholdit.imgix.net/~text?txtsize=33&txt=channel+logo&w=267&h=150"
-    Stream: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+    Title: "KANAL D"
+    streamFormat: "m3u8"
+    Logo: "https://4.bp.blogspot.com/-SGB-7EzeWvg/U_FLyDCYSuI/AAAAAAAABLs/N4FDCG1B8G0/s1600/kanald.jpg"
+    Stream: "https://demiroren.daioncdn.net/kanald/kanald_480p.m3u8?app=da2109ea-5dfe-4107-89ab-23593336ed61"
 }
 {
     Title: "Roku Example Three"
