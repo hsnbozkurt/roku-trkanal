@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--********** Copyright 2016 Roku Corp.  All Rights
+Reserved. **********-->
+
+
+<component name="LoadATVTask" extends="Task">
+
+    <interface>
+        <field id="content" type="node" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/Config.brs" />
+    <script type="text/brightscript">
+    
+        <![CDATA[
+            Sub Init()
+                m.top.functionName = "loadContent"
+            End Sub
+            function GetStreams(main_url as String) as String
+    ? "Fetching URL: " + main_url
+    videoPage = HttpGet(main_url,"https://google.com")
+    videoId = ParseVideoId(videoPage)
+    websiteId = ParseWebsiteId(videoPage)
+    
+if videoId = "" or websiteId = "" then
+    ? "Video ID veya Website ID bulunamadı."
+    ? "Video ID: "; videoId
+    ? "Website ID: "; websiteId
+    return ""
+end if
+
+    
+    apiUrl = "https://videojs.tmgrup.com.tr/getvideo/" + websiteId + "/" + videoId
+    videoData = HttpGet(apiUrl,main_url)
+    videoData = ParseJson(videoData)
+if videoData <> invalid and videoData.DoesExist("video") then
+    videoSmilUrl = videoData.video.VideoSmilUrl
+else
+    print "Video bilgisi bulunamadı!"
+end if
+    print "VideoSmilUrl: "; videoSmilUrl
+    secureUrl = "https://securevideotoken.tmgrup.com.tr/webtv/secure?url=" + EncodeUri(videoSmilUrl)
+    print "Secure URL: "; secureUrl
+    secureData = HttpGet(secureUrl,main_url)
+    
+    secureHlsUrl = ParseJson(secureData)
+    return secureHlsUrl.url
+end function
+function HttpGet(url as String,ref as String) as String
+    ' Create the roUrlTransfer object
+    urlTransfer = CreateObject("roUrlTransfer")
+    urlTransfer.SetUrl(url)
+    urlTransfer.AddHeader("Referer",ref)
+    urlTransfer.EnablePeerVerification(false)
+    urlTransfer.retainBodyOnError(True)
+    urlTransfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
+    
+    ' Initiate the URL fetch in the background
+    port = CreateObject("roMessagePort")
+    urlTransfer.SetMessagePort(port)
+    urlTransfer.AsyncGetToString()
+    
+    ' Wait for the response asynchronously
+    print "Waiting for response..."
+    message = wait(30000, urlTransfer.GetMessagePort())
+     if type(message) <> "roUrlEvent"
+    print "Error: "; message
+    return invalid
+  end if
+  if message.getString() = ""
+    print "Error: "; message.GetResponseCode()
+    return invalid
+  end if
+  print "Response: "; message.GetResponseCode()
+  return message.getString()
+end function
+
+function ParseVideoId(html as String) as String
+    parts = CreateObject("roRegex", "data-videoid=""(.*?)""","i").match(html)
+    return parts[1]
+end function
+function ParseWebsiteId(html as String) as String
+    ' regex match this data-websiteid="0fe2a405-8afa-4238-b429-e5f96aec3a5c"
+    parts = CreateObject("roRegex", "data-websiteid=""(.*?)""","i").match(html)
+
+    return parts[1]
+end function
+
+
+
+
+function ParseJson(jsonString as String, keyPath as String) as String
+    json = ParseJson(jsonString)
+    if json <> invalid then
+        parts = keyPath.Split(".")
+        for each part in parts
+            if json.DoesExist(part) then
+                json = json[part]
+            else
+                return ""
+            end if
+        end for
+        return json
+    end if
+    return ""
+end function
+function EncodeUri(url as String) as String
+    return url.Replace(" ", "%20")
+end function
+            Sub loadContent()
+                array = loadConfig()
+                
+                atv_url = getStreams("https://www.atv.com.tr/webtv/canli-yayin")
+                array.Unshift({
+                    Title: "ATV",
+                    streamFormat: "m3u8",
+                    Logo: "https://i.imgur.com/HyVUwFC.png",
+                    Stream: atv_url
+                })
+                minika_url = getStreams("https://www.minikacocuk.com.tr/webtv/canli-yayin")
+                minika_go_url = getStreams("https://www.minikago.com.tr/webtv/canli-yayin")
+                child_array = LoadChildren()
+                child_array.Unshift({
+                    Title: "Minika Cocuk",
+                    streamFormat: "m3u8",
+                    Logo: "https://i.imgur.com/VCywMTv.png",
+                    Stream: minika_url
+                })
+                child_array.Unshift({
+                    Title: "Minika Go",
+                    streamFormat: "m3u8",
+                    Logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/MinikaGO.png/220px-MinikaGO.png",
+                    Stream: minika_go_url
+                })
+                other_array = loadThirdRow()
+                oneRow = GetApiArray(array)
+                twoRow = GetApiArray(child_array)
+                threeRow = GetApiArray(other_array)
+                list = [
+                    {
+                        Title:"My Channels"
+                        ContentList : oneRow
+                    }
+                    {
+                        Title:"Children Channels"
+                        ContentList : twoRow
+                    }
+                    {
+                        Title:"Other Channels"
+                        ContentList : threeRow
+                    }
+                ]
+                m.top.content = ParseXMLContent(list)
+            End Sub
+            Function ParseXMLContent(list As Object)
+			    RowItems = createObject("RoSGNode","ContentNode")
+			    
+			    for each rowAA in list
+			        row = createObject("RoSGNode","ContentNode")
+			        row.Title = rowAA.Title
+			
+			        for each itemAA in rowAA.ContentList
+			            item = createObject("RoSGNode","ContentNode")
+			            item.SetFields(itemAA)
+			            row.appendChild(item)
+			        end for
+			        RowItems.appendChild(row)
+			    end for
+			
+			    return RowItems
+			End Function
+			
+			
+			Function GetApiArray(array as Object)
+			    result = []
+			    for each element in array
+			    	item = {}
+			    	item.Title = element.Title
+			    	item.streamFormat = element.streamFormat
+			    	item.HDPosterUrl = element.Logo
+			    	item.Url = element.Stream
+			        result.push(item)
+			    end for
+			    return result
+            End Function
+]]>
+    </script>
+</component>

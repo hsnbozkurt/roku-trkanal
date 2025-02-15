@@ -1,7 +1,7 @@
 
 ' ********** Copyright 2016 Roku Corp.  All Rights Reserved. **********
 
-Sub init()
+sub init()
     m.count = 0
     m.AdTimer = m.top.findNode("AdTimer")
     m.Video = m.top.findNode("Video")
@@ -11,45 +11,51 @@ Sub init()
     m.HideBar = m.top.findNode("HideBar")
     m.Hint = m.top.findNode("Hint")
     m.Timer = m.top.findNode("Timer")
-    
+
     m.Hint.font.size = "20"
     showHint()
-    
+
     m.array = loadConfig()
+    m.LoadTask = createObject("roSGNode", "LoadATVTask")
+    m.LoadTask.observeField("content", "rowListContentChanged") ' 'content' değiştiğinde bir fonksiyon çalıştırılacak
+    m.LoadTask.control = "RUN" ' Task'ı başlatıyoruz
+
     if m.array.count() = 1
         m.BottomBar.visible = false
         m.Video.setFocus(true)
     end if
-    
-    m.AdTimer.control = "start"
-    
-    m.LoadTask = createObject("roSGNode", "RowListContentTask")
-    m.LoadTask.observeField("content", "rowListContentChanged")
-    m.LoadTask.control = "RUN"
 
+    m.AdTimer.control = "start"
+
+    ' RowList'e focus veriyoruz
     m.RowList.setFocus(true)
     m.RowList.rowLabelFont.size = "24"
-    
+
+    ' Timer ile 'fire' olayını izliyoruz
     m.Timer.observeField("fire", "hideHint")
-    
+
+    ' AdTimer'ın 'fire' olayını izliyoruz
     m.AdTimer.observeField("fire", "change")
+
+    ' RowList'teki seçilen öğe değiştiğinde 'ChannelChange' fonksiyonunu çağırıyoruz
     m.RowList.observeField("rowItemSelected", "ChannelChange")
-End Sub
+end sub
 
-Sub change()
+
+sub change()
     m.global.Adtracker = 0
-End Sub
+end sub
 
-Sub  hideHint()
+sub hideHint()
     m.Hint.visible = false
-End Sub
+end sub
 
-Sub showHint()
+sub showHint()
     m.Hint.visible = true
     m.Timer.control = "start"
-End Sub
+end sub
 
-Sub optionsMenu()
+sub optionsMenu()
     if m.global.Options = 0
         m.ShowBar.control = "start"
         m.RowList.setFocus(true)
@@ -58,38 +64,37 @@ Sub optionsMenu()
         m.HideBar.control = "start"
         m.Video.setFocus(true)
         showHint()
-    End if
-End Sub
+    end if
+end sub
 
-function onKeyEvent(key as String, press as Boolean) as Boolean 
+function onKeyEvent(key as string, press as boolean) as boolean
     handled = false
-        if press
-           if key="up" or key = "down"
-                   if m.global.Options = 0
-                        m.global.Options = 1
-                        optionsMenu()
-                   else
-                        m.global.Options = 0
-                        optionsMenu()
-                   end if
-               handled = true
-           end if
+    if press
+        if key = "up" or key = "down"
+            if m.global.Options = 0
+                m.global.Options = 1
+                optionsMenu()
+            else
+                m.global.Options = 0
+                optionsMenu()
+            end if
+            handled = true
         end if
+    end if
     return handled
 end function
 
-Function ChannelChange()
-    m.global.AdTracker = 0
+function ChannelChange()
     m.Video.content = m.RowList.content.getChild(m.RowList.rowItemFocused[0]).getChild(m.RowList.rowItemFocused[1])
     m.Video.control = "play"
-End Function
+end function
 
-Sub rowListContentChanged()
+sub rowListContentChanged()
     m.RowList.content = m.LoadTask.content
     if m.count = 0
         m.Video.content = m.RowList.content.getChild(0).getChild(0)
         m.Video.control = "play"
         m.count = 1
     end if
-End Sub
+end sub
 
