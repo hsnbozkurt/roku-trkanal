@@ -63,7 +63,7 @@ function loadConfig() as object
             Title: "TLC"
             streamFormat: "m3u8"
             Logo: "http://assets.tvcdn.net/9871d781-b961-45cc-a287-c304f02bef1d.png"
-            Stream: "http://stream.tvcdn.net/eglence/tlc.m3u8"
+            Stream: "https://dogus-live.daioncdn.net/tlc/tlc.m3u8"
         }
         {
             Title: "TV8"
@@ -75,7 +75,7 @@ function loadConfig() as object
             Title: "TV8.5"
             streamFormat: "m3u8"
             Logo: "http://assets.tvcdn.net/be26f47c-18d7-4447-971c-ca4ba60ffb4c.png"
-            Stream: "http://stream.tvcdn.net/eglence/tv8-5.m3u8"
+            Stream: "https://tv8.daioncdn.net/tv8bucuk/tv8bucuk.m3u8?app=tv8bucuk_web"
         }
         {
             Title: "Beyaz TV"
@@ -97,12 +97,6 @@ function LoadChildren() as object
     arr = [
         '##### Format for inputting stream info #####
         '## For each channel, enclose in brackets ##
-        {
-            Title: "Cartoon Network"
-            streamFormat: "m3u8"
-            Logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/512px-Cartoon_Network_2010_logo.svg.png"
-            Stream: "https://cartoonnetwork.blutv.com/blutv_cartoonnetwork/live.m3u8"
-        }
         {
             Title: "TRT Cocuk",
             streamFormat: "m3u8",
@@ -163,40 +157,10 @@ function loadThirdRow() as object
             Stream: "https://tv-trtmuzik.medya.trt.com.tr/master.m3u8"
         }
         {
-            Title: "Cine 5"
+            Title: "Cine 1"
             streamFormat: "m3u8"
-            Logo: "https://i.imgur.com/AmcOAIY.png"
-            Stream: "https://cdn-cine5tv.yayin.com.tr/cine5tv/cine5tv/playlist.m3u8"
-        }
-        {
-            title: "Damar Web TV",
-            streamFormat: "m3u8",
-            logo: "http://assets.tvcdn.net/ff9bad51-26ca-40cb-8c05-071f1c775546.png",
-            stream: "http://stream.tvcdn.net/diger-muzik/damar-web-tv.m3u8"
-        }
-        {
-            Title: "Arabesk Web TV"
-            streamFormat: "m3u8"
-            Logo: "http://assets.tvcdn.net/372149bf-3045-43ea-9794-dfea243bfb0e.png"
-            Stream: "http://stream.tvcdn.net/diger-muzik/arabesk-web-tv.m3u8"
-        }
-        {
-            Title: "Sıla TV"
-            streamFormat: "m3u8"
-            Logo: "http://assets.tvcdn.net/92b15cce-55df-4138-a88e-e1c222eab7c9.png"
-            Stream: "http://stream.tvcdn.net/diger-muzik/sila-tv.m3u8"
-        }
-        {
-            Title: "Zeyno"
-            streamFormat: "m3u8"
-            Logo: "http://assets.tvcdn.net/21718aa9-5ff3-4620-acd8-68fbc544508d.png"
-            Stream: "http://stream.tvcdn.net/diger-muzik/zeyno.m3u8"
-        }
-        {
-            Title: "TV 5"
-            streamFormat: "m3u8"
-            Logo: "http://assets.tvcdn.net/3df2642a-042c-45b6-b292-01600c5590cd.png"
-            Stream: "http://stream.tvcdn.net/dini/tv-5.m3u8"
+            Logo: "https://www.lyngsat.com/logo/tv/cc/cine-1-tr.png"
+            Stream: "https://live.artidijitalmedya.com/artidijital_cine1/cine1/playlist.m3u8"
         }
         {
             Title: "TRT Haber"

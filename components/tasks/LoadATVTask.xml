@@ -20,6 +20,7 @@ Reserved. **********-->
             function GetStreams(main_url as String) as String
     ? "Fetching URL: " + main_url
     videoPage = HttpGet(main_url,"https://google.com")
+    print "Video Page: "; videoPage
     videoId = ParseVideoId(videoPage)
     websiteId = ParseWebsiteId(videoPage)
     
@@ -52,6 +53,7 @@ function HttpGet(url as String,ref as String) as String
     urlTransfer = CreateObject("roUrlTransfer")
     urlTransfer.SetUrl(url)
     urlTransfer.AddHeader("Referer",ref)
+    urlTransfer.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
     urlTransfer.EnablePeerVerification(false)
     urlTransfer.retainBodyOnError(True)
     urlTransfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
@@ -77,6 +79,7 @@ function HttpGet(url as String,ref as String) as String
 end function
 
 function ParseVideoId(html as String) as String
+    print html
     parts = CreateObject("roRegex", "data-videoid=""(.*?)""","i").match(html)
     return parts[1]
 end function
@@ -111,7 +114,7 @@ end function
             Sub loadContent()
                 array = loadConfig()
                 
-                atv_url = getStreams("https://www.atv.com.tr/webtv/canli-yayin")
+                atv_url = getStreams("https://www.atv.com.tr/canli-yayin")
                 array.Unshift({
                     Title: "ATV",
                     streamFormat: "m3u8",
