@@ -20,7 +20,6 @@ Reserved. **********-->
             function GetStreams(main_url as String) as String
     ? "Fetching URL: " + main_url
     videoPage = HttpGet(main_url,"https://google.com")
-    print "Video Page: "; videoPage
     videoId = ParseVideoId(videoPage)
     websiteId = ParseWebsiteId(videoPage)
     
@@ -79,7 +78,6 @@ function HttpGet(url as String,ref as String) as String
 end function
 
 function ParseVideoId(html as String) as String
-    print html
     parts = CreateObject("roRegex", "data-videoid=""(.*?)""","i").match(html)
     return parts[1]
 end function

@@ -45,7 +45,7 @@ function loadConfig() as object
             Title: "FOX TV"
             streamFormat: "m3u8"
             Logo: "https://i.imgur.com/5EYjWK7.png"
-            Stream: "https://c.fulltvizle.com/fox/index.m3u8"
+            Stream: "https://uycyyuuzyh.turknet.ercdn.net/nphindgytw/nowtv/nowtv.m3u8"
         }
         {
             Title: "STAR TV"
